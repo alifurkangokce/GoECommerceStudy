@@ -7,15 +7,15 @@ import (
 
 type ProductVariant struct {
 	Id             primitive.ObjectID `json:"_id`
-	ProductId      primitive.ObjectID `json:"productId,omitempty":"productId"`
-	Barcode        string             `json:"barcode,omitempty":"barcode"`
-	CompareAtPrice string             `json:"compareAtPrice,omitempty":"compareAtPrice"`
-	Price          string             `json:"price,omitempty":"price"`
-	Position       int                `json:"position,omitempty":"position"`
-	Sku            string             `json:"sku,omitempty" :"sku"`
-	Weight         int                `json:"weight,omitempty" :"weight"`
-	WeightUnit     int                `json:"weightUnit,omitempty" :"weightUnit"`
-	CreatedAt      time.Time          `json:"createdAt,omitempty" :"createdAt"`
-	UpdatedAt      time.Time          `json:"updatedAt,omitempty" :"updatedAt"`
-	Title          string             `json:"title,omitempty":"title"`
+	ProductId      primitive.ObjectID `json:"productId":"productId"`
+	Barcode        string             `json:"barcode":"barcode"`
+	CompareAtPrice string             `json:"compareAtPrice":"compareAtPrice"`
+	Price          string             `json:"price":"price"`
+	Position       int                `json:"position":"position"`
+	Sku            string             `json:"sku" :"sku"`
+	Weight         int                `json:"weight" :"weight"`
+	WeightUnit     int                `json:"weightUnit" :"weightUnit"`
+	CreatedAt      time.Time          `json:"createdAt" :"createdAt"`
+	UpdatedAt      time.Time          `json:"updatedAt" :"updatedAt"`
+	Title          string             `json:"title":"title"`
 }

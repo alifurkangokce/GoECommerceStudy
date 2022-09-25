@@ -16,5 +16,7 @@ func main() {
 	p := app.ProductHandler{Service: services.NewProductService(ProductRepository)}
 
 	appRoute.Post("/api/products", p.CreateProduct)
+	appRoute.Get("api/products", p.GetAllProducts)
+	appRoute.Delete("api/products/:id", p.DeleteProduct)
 	appRoute.Listen(":8080")
 }
