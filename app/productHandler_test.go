@@ -3,7 +3,6 @@ package app
 import (
 	services "GoECommerceStudy/mocks/service"
 	"GoECommerceStudy/models"
-	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
@@ -38,6 +37,5 @@ func TestProductHandler(t *testing.T) {
 	mockService.EXPECT().ProductsGet().Return(FakeDataForHandler, nil)
 	req := httptest.NewRequest("GET", "/api/products", nil)
 	resp, _ := router.Test(req, 1)
-	fmt.Println(resp)
 	assert.Equal(t, 200, resp.StatusCode)
 }

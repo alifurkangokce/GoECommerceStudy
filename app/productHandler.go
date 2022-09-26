@@ -41,3 +41,16 @@ func (h ProductHandler) DeleteProduct(ctx *fiber.Ctx) error {
 	return ctx.Status(http.StatusOK).JSON(fiber.Map{"State": true})
 
 }
+func (h ProductHandler) ProductUpdate(ctx *fiber.Ctx) error {
+	var product models.Product
+	if err := ctx.BodyParser(&product); err != nil {
+		return ctx.Status(http.StatusBadRequest).JSON(err.Error())
+	}
+	Id := ctx.Params("id")
+	_Id, _ := primitive.ObjectIDFromHex(Id)
+	result, err := h.Service.ProductUpdate(_Id, product)
+	if err != nil || result.Status == false {
+		return err
+	}
+	return ctx.Status(http.StatusOK).JSON(result)
+}

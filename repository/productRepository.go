@@ -19,6 +19,7 @@ type ProductRepository interface {
 	Insert(product models.Product) (bool, error)
 	GetAll() ([]models.Product, error)
 	Delete(id primitive.ObjectID) (bool, error)
+	Update(id primitive.ObjectID, product models.Product) (bool, error)
 }
 
 func NewProductRepository(dbClient *mongo.Collection) ProductRepositoryDB {
@@ -67,5 +68,20 @@ func (t ProductRepositoryDB) Delete(id primitive.ObjectID) (bool, error) {
 	if err != nil || result.DeletedCount <= 0 {
 		return false, err
 	}
+	return true, nil
+}
+func (t ProductRepositoryDB) Update(id primitive.ObjectID, product models.Product) (bool, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	_, err := t.ProductCollection.UpdateByID(ctx, id, bson.M{
+		"$set": bson.M{
+			"name":       product.Name,
+			"updated_at": time.Now(),
+		},
+	})
+	if err != nil {
+		return false, nil
+	}
+
 	return true, nil
 }

@@ -66,6 +66,21 @@ func (mr *MockProductServiceMockRecorder) ProductInsert(arg0 interface{}) *gomoc
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProductInsert", reflect.TypeOf((*MockProductService)(nil).ProductInsert), arg0)
 }
 
+// ProductUpdate mocks base method.
+func (m *MockProductService) ProductUpdate(arg0 primitive.ObjectID, arg1 models.Product) (*dto.ProductDto, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ProductUpdate", arg0, arg1)
+	ret0, _ := ret[0].(*dto.ProductDto)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ProductUpdate indicates an expected call of ProductUpdate.
+func (mr *MockProductServiceMockRecorder) ProductUpdate(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProductUpdate", reflect.TypeOf((*MockProductService)(nil).ProductUpdate), arg0, arg1)
+}
+
 // ProductsGet mocks base method.
 func (m *MockProductService) ProductsGet() ([]models.Product, error) {
 	m.ctrl.T.Helper()

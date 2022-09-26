@@ -15,6 +15,7 @@ type ProductService interface {
 	ProductInsert(product models.Product) (*dto.ProductDto, error)
 	ProductsGet() ([]models.Product, error)
 	ProductDelete(id primitive.ObjectID) (bool, error)
+	ProductUpdate(id primitive.ObjectID, product models.Product) (*dto.ProductDto, error)
 }
 
 func NewProductService(Repo repository.ProductRepository) DefaultProductService {
@@ -49,4 +50,14 @@ func (d DefaultProductService) ProductDelete(id primitive.ObjectID) (bool, error
 	}
 	return result, nil
 
+}
+func (d DefaultProductService) ProductUpdate(id primitive.ObjectID, product models.Product) (*dto.ProductDto, error) {
+	var res dto.ProductDto
+	result, err := d.Repo.Update(id, product)
+	if err != nil || result == false {
+		res.Status = false
+		return nil, err
+	}
+	res = dto.ProductDto{Status: result}
+	return &res, nil
 }
