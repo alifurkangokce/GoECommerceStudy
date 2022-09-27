@@ -26,7 +26,7 @@ func (d DefaultProductService) ProductInsert(product models.Product) (*dto.Produ
 	var res dto.ProductDto
 	if len(product.Name) <= 3 {
 		res.Status = false
-		return &res, nil
+		return &dto.ProductDto{Status: false}, nil
 	}
 	result, err := d.Repo.Insert(product)
 	if err != nil || result == false {

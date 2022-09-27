@@ -25,7 +25,7 @@ func setup(t *testing.T) func() {
 	}
 }
 
-func TestProductHandler(t *testing.T) {
+func TestGetAllProducts_Handler(t *testing.T) {
 	trd := setup(t)
 	defer trd()
 
