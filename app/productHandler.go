@@ -3,7 +3,6 @@ package app
 import (
 	"GoECommerceStudy/models"
 	"GoECommerceStudy/services"
-	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"net/http"
@@ -19,11 +18,13 @@ func (h ProductHandler) CreateProduct(ctx *fiber.Ctx) error {
 
 		return ctx.Status(http.StatusBadRequest).JSON(err.Error())
 	}
-	fmt.Println(product)
+
 	result, err := h.Service.ProductInsert(product)
+
 	if err != nil || result.Status == false {
 		return ctx.Status(http.StatusBadRequest).JSON(fiber.Map{"State": false})
 	}
+
 	return ctx.Status(http.StatusCreated).JSON(true)
 }
 func (h ProductHandler) GetAllProducts(ctx *fiber.Ctx) error {
