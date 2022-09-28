@@ -63,3 +63,25 @@ func TestCreateProduct_Handler(t *testing.T) {
 	resp, _ := router.Test(req)
 	assert.Equal(t, 201, resp.StatusCode)
 }
+func TestUpdateProduct_Handler(t *testing.T) {
+	trd := setup(t)
+	defer trd()
+
+	id, _ := primitive.ObjectIDFromHex("63302901533dcab4951b9b6b")
+	fake := models.Product{
+		Id:   id,
+		Name: gofakeit.Name(),
+	}
+	firstReturn := dto.ProductDto{
+		Status: true,
+	}
+
+	router := fiber.New()
+	router.Post("/api/products/:id", td.ProductUpdate)
+	mockService.EXPECT().ProductUpdate(id, fake).Return(&firstReturn, nil)
+	jsonBytes, _ := json.Marshal(fake)
+	req := httptest.NewRequest("POST", "/api/products/63302901533dcab4951b9b6b", bytes.NewReader(jsonBytes))
+	req.Header.Set("Content-Type", "application/json")
+	resp, _ := router.Test(req)
+	assert.Equal(t, 200, resp.StatusCode)
+}

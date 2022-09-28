@@ -56,7 +56,7 @@ func (d DefaultProductService) ProductUpdate(id primitive.ObjectID, product mode
 	result, err := d.Repo.Update(id, product)
 	if err != nil || result == false {
 		res.Status = false
-		return nil, err
+		return &res, err
 	}
 	res = dto.ProductDto{Status: result}
 	return &res, nil
