@@ -6,12 +6,12 @@ import (
 )
 
 type ProductImage struct {
-	Id        primitive.ObjectID `json:"_id`
-	ProductId primitive.ObjectID `json:"productId":"productId"`
-	Position  int8               `json:"position":"position"`
-	CreatedAt time.Time          `json:"createdAt":"created_at"`
-	UpdatedAt time.Time          `json:"updatedAt":"updated_at"`
-	Width     int16              `json:"width":"width"`
-	Height    int16              `json:"height":"height"`
-	Src       string             `json:"src":"src"`
+	Id        primitive.ObjectID `bson:"_id"`
+	ProductId primitive.ObjectID `bson:"productId" json:"productId"`
+	Position  int8               `bson:"position" json:"position"`
+	CreatedAt time.Time          `bson:"createdAt" json:"created_at"`
+	UpdatedAt time.Time          `bson:"updatedAt" json:"updated_at"`
+	Width     int16              `bson:"width" json:"width"`
+	Height    int16              `bson:"height" json:"height"`
+	Src       string             `bson:"src" json:"src"`
 }

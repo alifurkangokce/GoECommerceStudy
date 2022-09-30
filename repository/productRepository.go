@@ -3,7 +3,6 @@ package repository
 import (
 	"GoECommerceStudy/models"
 	"context"
-	"errors"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -34,7 +33,7 @@ func (t ProductRepositoryDB) Insert(product models.Product) (bool, error) {
 	result, err := t.ProductCollection.InsertOne(ctx, product)
 
 	if result.InsertedID == nil || err != nil {
-		errors.New("product add failed")
+		log.Fatalln(err)
 		return false, err
 	}
 	return true, nil
@@ -77,6 +76,7 @@ func (t ProductRepositoryDB) Update(id primitive.ObjectID, product models.Produc
 		"$set": bson.M{
 			"name":       product.Name,
 			"updated_at": time.Now(),
+			"images":     product.Images,
 		},
 	})
 	if err != nil {

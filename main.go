@@ -4,8 +4,10 @@ import (
 	"GoECommerceStudy/app"
 	"GoECommerceStudy/configs"
 	"GoECommerceStudy/repository"
+	"GoECommerceStudy/routes"
 	"GoECommerceStudy/services"
 	"github.com/gofiber/fiber/v2"
+	"log"
 )
 
 func main() {
@@ -14,10 +16,9 @@ func main() {
 	dbClient := configs.GetCollection(configs.DB, "product")
 	ProductRepository := repository.NewProductRepository(dbClient)
 	p := app.ProductHandler{Service: services.NewProductService(ProductRepository)}
+	routes.SetProductRoutes(appRoute, p)
 
-	appRoute.Post("/api/products", p.CreateProduct)
-	appRoute.Post("/api/products/:id", p.ProductUpdate)
-	appRoute.Get("api/products", p.GetAllProducts)
-	appRoute.Delete("api/products/:id", p.DeleteProduct)
-	appRoute.Listen(":8080")
+	if err := appRoute.Listen(":8080"); err != nil {
+		log.Fatalln("Error listening")
+	}
 }
