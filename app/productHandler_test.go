@@ -85,3 +85,16 @@ func TestUpdateProduct_Handler(t *testing.T) {
 	resp, _ := router.Test(req)
 	assert.Equal(t, 200, resp.StatusCode)
 }
+func TestDeleteProduct_Handler(t *testing.T) {
+	trd := setup(t)
+	defer trd()
+
+	id, _ := primitive.ObjectIDFromHex("63302901533dcab4951b9b6b")
+	router := fiber.New()
+	router.Delete("/api/products/:id", td.DeleteProduct)
+	mockService.EXPECT().ProductDelete(id).Return(true, nil)
+	req := httptest.NewRequest("DELETE", "/api/products/63302901533dcab4951b9b6b", nil)
+	req.Header.Set("Content-Type", "application/json")
+	resp, _ := router.Test(req)
+	assert.Equal(t, 200, resp.StatusCode)
+}
