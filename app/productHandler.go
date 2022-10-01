@@ -3,6 +3,7 @@ package app
 import (
 	"GoECommerceStudy/models"
 	"GoECommerceStudy/services"
+	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"net/http"
@@ -13,6 +14,7 @@ type ProductHandler struct {
 }
 
 func (h ProductHandler) CreateProduct(ctx *fiber.Ctx) error {
+	fmt.Println("girdi1")
 	var product models.Product
 	if err := ctx.BodyParser(&product); err != nil {
 
@@ -28,6 +30,7 @@ func (h ProductHandler) CreateProduct(ctx *fiber.Ctx) error {
 	return ctx.Status(http.StatusCreated).JSON(true)
 }
 func (h ProductHandler) GetAllProducts(ctx *fiber.Ctx) error {
+	fmt.Println("girdi2")
 	result, err := h.Service.ProductsGet()
 	if err != nil {
 		return ctx.Status(http.StatusBadRequest).JSON(err.Error())
@@ -35,6 +38,7 @@ func (h ProductHandler) GetAllProducts(ctx *fiber.Ctx) error {
 	return ctx.Status(http.StatusOK).JSON(result)
 }
 func (h ProductHandler) DeleteProduct(ctx *fiber.Ctx) error {
+	fmt.Println("girdi3")
 	productId := ctx.Params("id")
 	cnvId, _ := primitive.ObjectIDFromHex(productId)
 	result, err := h.Service.ProductDelete(cnvId)
@@ -45,6 +49,7 @@ func (h ProductHandler) DeleteProduct(ctx *fiber.Ctx) error {
 
 }
 func (h ProductHandler) ProductUpdate(ctx *fiber.Ctx) error {
+	fmt.Println("girdi4")
 	var product models.Product
 	if err := ctx.BodyParser(&product); err != nil {
 		return ctx.Status(http.StatusBadRequest).JSON(err.Error())

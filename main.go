@@ -13,10 +13,17 @@ import (
 func main() {
 	appRoute := fiber.New()
 	configs.ConnectDB()
-	dbClient := configs.GetCollection(configs.DB, "product")
-	ProductRepository := repository.NewProductRepository(dbClient)
-	p := app.ProductHandler{Service: services.NewProductService(ProductRepository)}
-	routes.SetProductRoutes(appRoute, p)
+	productDbClient := configs.GetCollection(configs.DB, "product")
+	ProductRepository := repository.NewProductRepository(productDbClient)
+	product := app.ProductHandler{Service: services.NewProductService(ProductRepository)}
+	routes.SetProductRoutes(appRoute, product)
+
+	productImageDbClient := configs.GetCollection(configs.DB, "productImage")
+	ProductImageRepository := repository.NewProductImageRepository(productImageDbClient)
+	productImage := app.ProductImageHandler{
+		Service: services.NewProductImageService(ProductImageRepository),
+	}
+	routes.SetProductImageRoutes(appRoute, productImage)
 
 	if err := appRoute.Listen(":8080"); err != nil {
 		log.Fatalln("Error listening")
