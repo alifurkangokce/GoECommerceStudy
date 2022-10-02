@@ -6,37 +6,51 @@ import (
 	"github.com/go-playground/validator/v10"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"log"
+	"time"
 )
 
-//go:generate mockgen -destination=../mocks/service/mockProductImageService.go -package=services GoECommerceStudy/services ProductService
+//go:generate mockgen -destination=../mocks/service/mockProductImageService.go -package=services GoECommerceStudy/services ProductImageService
 type DefaultProductImageService struct {
 	Repo repository.ProductImageRepository
 }
 
 func (pI DefaultProductImageService) ProductImagesGet() ([]models.ProductImage, error) {
-	//TODO implement me
-	panic("implement me")
+	result, err := pI.Repo.GetAll()
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
 }
 
-func (pI DefaultProductImageService) GetImageById(id primitive.ObjectID) (models.ProductImage, error) {
-	//TODO implement me
-	panic("implement me")
+func (pI DefaultProductImageService) GetImageById(id primitive.ObjectID) (*models.ProductImage, error) {
+	result, err := pI.Repo.GetById(id)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
 }
 
 func (pI DefaultProductImageService) ProductImageDelete(id primitive.ObjectID) (bool, error) {
-	//TODO implement me
-	panic("implement me")
+	result, err := pI.Repo.Delete(id)
+	if err != nil {
+		return result, err
+	}
+	return result, nil
 }
 
 func (pI DefaultProductImageService) ProductImageUpdate(id primitive.ObjectID, productImage models.ProductImage) (bool, error) {
-	//TODO implement me
-	panic("implement me")
+	productImage.UpdatedAt = time.Now()
+	result, err := pI.Repo.Update(id, productImage)
+	if err != nil {
+		return result, err
+	}
+	return result, nil
 }
 
 type ProductImageService interface {
-	ProductImageInsert(productImage models.ProductImage) (bool, error)
+	ProductImageInsert(productImage models.ProductImage) (primitive.ObjectID, error)
 	ProductImagesGet() ([]models.ProductImage, error)
-	GetImageById(id primitive.ObjectID) (models.ProductImage, error)
+	GetImageById(id primitive.ObjectID) (*models.ProductImage, error)
 	ProductImageDelete(id primitive.ObjectID) (bool, error)
 	ProductImageUpdate(id primitive.ObjectID, productImage models.ProductImage) (bool, error)
 }
@@ -44,16 +58,16 @@ type ProductImageService interface {
 func NewProductImageService(Repo repository.ProductImageRepository) DefaultProductImageService {
 	return DefaultProductImageService{Repo: Repo}
 }
-func (pI DefaultProductImageService) ProductImageInsert(productImage models.ProductImage) (bool, error) {
+func (pI DefaultProductImageService) ProductImageInsert(productImage models.ProductImage) (primitive.ObjectID, error) {
 	v := validator.New()
 	if err := v.Struct(productImage); err != nil {
 		log.Fatalln(err)
-		return false, err
+		return primitive.ObjectID{}, err
 	}
 	result, err := pI.Repo.Insert(productImage)
 	if err != nil {
 		log.Fatalln(err)
-		return false, err
+		return primitive.ObjectID{}, err
 	}
 	return result, nil
 }

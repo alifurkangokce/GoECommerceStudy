@@ -5,11 +5,13 @@ import (
 	"GoECommerceStudy/models"
 	"GoECommerceStudy/repository"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"time"
 )
 
 //go:generate mockgen -destination=../mocks/service/mockProductService.go -package=services GoECommerceStudy/services ProductService
 type DefaultProductService struct {
-	Repo repository.ProductRepository
+	Repo      repository.ProductRepository
+	ImageRepo repository.ProductImageRepository
 }
 type ProductService interface {
 	ProductInsert(product models.Product) (*dto.ProductDto, error)
@@ -18,8 +20,8 @@ type ProductService interface {
 	ProductUpdate(id primitive.ObjectID, product models.Product) (*dto.ProductDto, error)
 }
 
-func NewProductService(Repo repository.ProductRepository) DefaultProductService {
-	return DefaultProductService{Repo: Repo}
+func NewProductService(Repo repository.ProductRepository, ImageRepo repository.ProductImageRepository) DefaultProductService {
+	return DefaultProductService{Repo: Repo, ImageRepo: ImageRepo}
 }
 
 func (d DefaultProductService) ProductInsert(product models.Product) (*dto.ProductDto, error) {
@@ -29,11 +31,28 @@ func (d DefaultProductService) ProductInsert(product models.Product) (*dto.Produ
 		return &dto.ProductDto{Status: false}, nil
 	}
 	result, err := d.Repo.Insert(product)
-	if err != nil || result == false {
+	if err != nil {
 		res.Status = false
 		return nil, err
 	}
-	res = dto.ProductDto{Status: result}
+	if product.Images != nil {
+		var updateImages []models.ProductImage
+		for _, image := range product.Images {
+			dto := models.ProductImage{
+				ProductId: result,
+				Position:  image.Position,
+				CreatedAt: time.Now(),
+				Width:     image.Width,
+				Height:    image.Height,
+				Src:       image.Src,
+			}
+			imageInsertedId, _ := d.ImageRepo.Insert(dto)
+			dto.Id = imageInsertedId
+			updateImages = append(updateImages, dto)
+		}
+		d.Repo.Update(result, models.Product{Images: updateImages})
+	}
+	res = dto.ProductDto{Status: true}
 	return &res, nil
 }
 func (d DefaultProductService) ProductsGet() ([]models.Product, error) {

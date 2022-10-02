@@ -15,7 +15,7 @@ type ProductRepositoryDB struct {
 	ProductCollection *mongo.Collection
 }
 type ProductRepository interface {
-	Insert(product models.Product) (bool, error)
+	Insert(product models.Product) (primitive.ObjectID, error)
 	GetAll() ([]models.Product, error)
 	Delete(id primitive.ObjectID) (bool, error)
 	Update(id primitive.ObjectID, product models.Product) (bool, error)
@@ -25,7 +25,7 @@ func NewProductRepository(dbClient *mongo.Collection) ProductRepositoryDB {
 	return ProductRepositoryDB{ProductCollection: dbClient}
 }
 
-func (t ProductRepositoryDB) Insert(product models.Product) (bool, error) {
+func (t ProductRepositoryDB) Insert(product models.Product) (primitive.ObjectID, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	product.Id = primitive.NewObjectID()
@@ -34,9 +34,9 @@ func (t ProductRepositoryDB) Insert(product models.Product) (bool, error) {
 
 	if result.InsertedID == nil || err != nil {
 		log.Fatalln(err)
-		return false, err
+		return primitive.ObjectID{}, err
 	}
-	return true, nil
+	return result.InsertedID.(primitive.ObjectID), nil
 }
 func (t ProductRepositoryDB) GetAll() ([]models.Product, error) {
 	var product models.Product

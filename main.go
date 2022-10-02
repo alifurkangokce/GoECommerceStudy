@@ -15,11 +15,10 @@ func main() {
 	configs.ConnectDB()
 	productDbClient := configs.GetCollection(configs.DB, "product")
 	ProductRepository := repository.NewProductRepository(productDbClient)
-	product := app.ProductHandler{Service: services.NewProductService(ProductRepository)}
-	routes.SetProductRoutes(appRoute, product)
-
 	productImageDbClient := configs.GetCollection(configs.DB, "productImage")
 	ProductImageRepository := repository.NewProductImageRepository(productImageDbClient)
+	product := app.ProductHandler{Service: services.NewProductService(ProductRepository, ProductImageRepository)}
+	routes.SetProductRoutes(appRoute, product)
 	productImage := app.ProductImageHandler{
 		Service: services.NewProductImageService(ProductImageRepository),
 	}

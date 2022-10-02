@@ -11,6 +11,7 @@ import (
 )
 
 var mockRepo *repository.MockProductRepository
+var mockImageRepo *repository.MockProductImageRepository
 var service ProductService
 var ProductsGetFakeData = []models.Product{
 	{Id: primitive.NewObjectID(), Name: gofakeit.Name()},
@@ -24,7 +25,7 @@ func setup(t *testing.T) func() {
 	ct := gomock.NewController(t)
 	defer ct.Finish()
 	mockRepo = repository.NewMockProductRepository(ct)
-	service = NewProductService(mockRepo)
+	service = NewProductService(mockRepo, mockImageRepo)
 	return func() {
 		service = nil
 		defer ct.Finish()
@@ -45,7 +46,7 @@ func TestDefaultProductService_ProductsGet(t *testing.T) {
 func TestDefaultProductService_ProductInsert(t *testing.T) {
 	td := setup(t)
 	defer td()
-	mockRepo.EXPECT().Insert(ProductRequest).Return(true, nil)
+	mockRepo.EXPECT().Insert(ProductRequest).Return(primitive.ObjectID{}, nil)
 	result, err := service.ProductInsert(ProductRequest)
 
 	if err != nil {
