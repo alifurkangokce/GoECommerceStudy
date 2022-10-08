@@ -6,47 +6,12 @@ import (
 	"github.com/go-playground/validator/v10"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"log"
-	"time"
 )
 
 //go:generate mockgen -destination=../mocks/service/mockProductImageService.go -package=services GoECommerceStudy/services ProductImageService
 type DefaultProductImageService struct {
 	Repo repository.ProductImageRepository
 }
-
-func (pI DefaultProductImageService) ProductImagesGet() ([]models.ProductImage, error) {
-	result, err := pI.Repo.GetAll()
-	if err != nil {
-		return nil, err
-	}
-	return result, nil
-}
-
-func (pI DefaultProductImageService) GetImageById(id primitive.ObjectID) (*models.ProductImage, error) {
-	result, err := pI.Repo.GetById(id)
-	if err != nil {
-		return nil, err
-	}
-	return result, nil
-}
-
-func (pI DefaultProductImageService) ProductImageDelete(id primitive.ObjectID) (bool, error) {
-	result, err := pI.Repo.Delete(id)
-	if err != nil {
-		return result, err
-	}
-	return result, nil
-}
-
-func (pI DefaultProductImageService) ProductImageUpdate(id primitive.ObjectID, productImage models.ProductImage) (bool, error) {
-	productImage.UpdatedAt = time.Now()
-	result, err := pI.Repo.Update(id, productImage)
-	if err != nil {
-		return result, err
-	}
-	return result, nil
-}
-
 type ProductImageService interface {
 	ProductImageInsert(productImage models.ProductImage) (primitive.ObjectID, error)
 	ProductImagesGet() ([]models.ProductImage, error)
@@ -68,6 +33,39 @@ func (pI DefaultProductImageService) ProductImageInsert(productImage models.Prod
 	if err != nil {
 		log.Fatalln(err)
 		return primitive.ObjectID{}, err
+	}
+	return result, nil
+}
+func (pI DefaultProductImageService) ProductImagesGet() ([]models.ProductImage, error) {
+	result, err := pI.Repo.GetAll()
+	if err != nil {
+		log.Fatalln(err)
+		return nil, err
+	}
+	return result, nil
+}
+func (pI DefaultProductImageService) GetImageById(id primitive.ObjectID) (*models.ProductImage, error) {
+	result, err := pI.Repo.GetById(id)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+
+}
+func (pI DefaultProductImageService) ProductImageDelete(id primitive.ObjectID) (bool, error) {
+	result, err := pI.Repo.Delete(id)
+	if err != nil {
+		log.Fatalln(err)
+		return result, err
+	}
+	return result, nil
+
+}
+func (pI DefaultProductImageService) ProductImageUpdate(id primitive.ObjectID, productImage models.ProductImage) (bool, error) {
+	result, err := pI.Repo.Update(id, productImage)
+	if err != nil {
+		log.Fatalln(err)
+		return result, err
 	}
 	return result, nil
 }

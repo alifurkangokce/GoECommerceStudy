@@ -11,7 +11,6 @@ import (
 )
 
 var mockRepo *repository.MockProductRepository
-var mockImageRepo *repository.MockProductImageRepository
 var service ProductService
 var ProductsGetFakeData = []models.Product{
 	{Id: primitive.NewObjectID(), Name: gofakeit.Name()},
@@ -21,10 +20,11 @@ var ProductRequest = models.Product{
 	Name: gofakeit.Name(),
 }
 
-func setup(t *testing.T) func() {
+func productSetup(t *testing.T) func() {
 	ct := gomock.NewController(t)
 	defer ct.Finish()
 	mockRepo = repository.NewMockProductRepository(ct)
+	mockImageRepo = repository.NewMockProductImageRepository(ct)
 	service = NewProductService(mockRepo, mockImageRepo)
 	return func() {
 		service = nil
@@ -33,7 +33,7 @@ func setup(t *testing.T) func() {
 }
 
 func TestDefaultProductService_ProductsGet(t *testing.T) {
-	td := setup(t)
+	td := productSetup(t)
 	defer td()
 	mockRepo.EXPECT().GetAll().Return(ProductsGetFakeData, nil)
 	result, err := service.ProductsGet()
@@ -44,7 +44,7 @@ func TestDefaultProductService_ProductsGet(t *testing.T) {
 }
 
 func TestDefaultProductService_ProductInsert(t *testing.T) {
-	td := setup(t)
+	td := productSetup(t)
 	defer td()
 	mockRepo.EXPECT().Insert(ProductRequest).Return(primitive.ObjectID{}, nil)
 	result, err := service.ProductInsert(ProductRequest)
@@ -55,7 +55,7 @@ func TestDefaultProductService_ProductInsert(t *testing.T) {
 	assert.Equal(t, result.Status, true)
 }
 func TestDefaultProductService_ProductDelete(t *testing.T) {
-	td := setup(t)
+	td := productSetup(t)
 	defer td()
 	Id := ProductsGetFakeData[0].Id
 	mockRepo.EXPECT().Delete(Id).Return(true, nil)
@@ -68,7 +68,7 @@ func TestDefaultProductService_ProductDelete(t *testing.T) {
 }
 
 func TestDefaultProductService_ProductUpdate(t *testing.T) {
-	td := setup(t)
+	td := productSetup(t)
 	defer td()
 	Id := ProductsGetFakeData[0].Id
 	mockRepo.EXPECT().Update(Id, ProductsGetFakeData[0]).Return(true, nil)
