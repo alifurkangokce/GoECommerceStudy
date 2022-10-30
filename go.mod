@@ -14,6 +14,7 @@ require (
 	github.com/andybalholm/brotli v1.0.4 // indirect
 	github.com/brianvoe/gofakeit/v6 v6.19.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/devfeel/mapper v0.7.10 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
 	github.com/go-playground/validator/v10 v10.11.1 // indirect

@@ -1,12 +1,13 @@
-package models
+package dto
 
 import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"time"
 )
 
-type ProductVariant struct {
-	Id             primitive.ObjectID `bson:"_id" json:"id"`
+type ProductVariantInsertDto struct {
+	Id             primitive.ObjectID `bson:"_id`
+	ProductId      primitive.ObjectID `bson:"productId"`
 	Barcode        string             `bson:"barcode" json:"barcode"`
 	CompareAtPrice string             `bson:"compareAtPrice" json:"compareAtPrice"`
 	Price          string             `bson:"price" json:"price"`

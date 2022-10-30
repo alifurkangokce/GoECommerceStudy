@@ -27,8 +27,7 @@ func main() {
 	product := app.ProductHandler{Service: services.NewProductService(ProductRepository, ProductImageRepository)}
 	routes.SetProductRoutes(appRoute, product)
 
-	productVariantDbClient := configs.GetCollection(configs.DB, "productVariant")
-	ProductVariantRepository := repository.NewProductVariantRepository(productVariantDbClient)
+	ProductVariantRepository := repository.NewProductVariantRepository(productDbClient)
 
 	productVariant := app.ProductVariantHandler{
 		Service: services.NewProductVariantService(ProductVariantRepository),

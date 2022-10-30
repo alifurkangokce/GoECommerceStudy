@@ -1,8 +1,9 @@
 package services
 
 import (
-	"GoECommerceStudy/models"
+	"GoECommerceStudy/dto"
 	"GoECommerceStudy/repository"
+	"github.com/go-playground/validator/v10"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -15,20 +16,29 @@ func NewProductVariantService(Repo repository.ProductVariantRepository) DefaultP
 }
 
 type ProductVariantService interface {
-	ProductVariantInsert(variant models.ProductVariant) (primitive.ObjectID, error)
-	ProductVariantUpdate(id primitive.ObjectID, variant models.ProductVariant) (bool, error)
+	ProductVariantInsert(variant dto.ProductVariantInsertDto) (bool, error)
+	ProductVariantUpdate(id primitive.ObjectID, variant dto.ProductVariantUpdateRequestDto) (bool, error)
 	ProductVariantDelete(id primitive.ObjectID) (bool, error)
 }
 
-func (v DefaultProductVariantService) ProductVariantInsert(variant models.ProductVariant) (primitive.ObjectID, error) {
-	InsertedId, err := v.Repo.Insert(variant)
-	if err != nil {
-		return primitive.ObjectID{}, err
+func (v DefaultProductVariantService) ProductVariantInsert(variant dto.ProductVariantInsertDto) (bool, error) {
+	valid := validator.New()
+	if err := valid.Struct(variant); err != nil {
+		return false, err
 	}
-	return InsertedId, nil
+	_, err := v.Repo.Insert(variant)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
 }
-func (v DefaultProductVariantService) ProductVariantUpdate(id primitive.ObjectID, variant models.ProductVariant) (bool, error) {
+func (v DefaultProductVariantService) ProductVariantUpdate(id primitive.ObjectID, variant dto.ProductVariantUpdateRequestDto) (bool, error) {
+
 	result, err := v.Repo.Update(id, variant)
+	valid := validator.New()
+	if err := valid.Struct(variant); err != nil {
+		return false, err
+	}
 	if err != nil {
 		return false, err
 	}
