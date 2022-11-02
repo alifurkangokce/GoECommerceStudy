@@ -37,9 +37,18 @@ func (s ProductVariantHandler) UpdateProductVariant(ctx *fiber.Ctx) error {
 	return ctx.Status(http.StatusNoContent).JSON(fiber.Map{"Status": result})
 }
 func (s ProductVariantHandler) DeleteProductVariant(ctx *fiber.Ctx) error {
+
+	var productVariant dto.ProductVariantDeleteRequestDto
+	if err := ctx.BodyParser(&productVariant); err != nil {
+		return err
+	}
+
 	id := ctx.Params("id")
 	_Id, _ := primitive.ObjectIDFromHex(id)
-	result, err := s.Service.ProductVariantDelete(_Id)
+	_variantId, _ := primitive.ObjectIDFromHex(productVariant.VariantId)
+
+	result, err := s.Service.ProductVariantDelete(_Id, _variantId)
+
 	if err != nil {
 		return ctx.Status(http.StatusNotFound).JSON(fiber.Map{"Status": false})
 	}

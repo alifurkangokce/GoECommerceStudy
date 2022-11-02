@@ -18,7 +18,7 @@ func NewProductVariantService(Repo repository.ProductVariantRepository) DefaultP
 type ProductVariantService interface {
 	ProductVariantInsert(variant dto.ProductVariantInsertDto) (bool, error)
 	ProductVariantUpdate(id primitive.ObjectID, variant dto.ProductVariantUpdateRequestDto) (bool, error)
-	ProductVariantDelete(id primitive.ObjectID) (bool, error)
+	ProductVariantDelete(id primitive.ObjectID, variantId primitive.ObjectID) (bool, error)
 }
 
 func (v DefaultProductVariantService) ProductVariantInsert(variant dto.ProductVariantInsertDto) (bool, error) {
@@ -44,9 +44,9 @@ func (v DefaultProductVariantService) ProductVariantUpdate(id primitive.ObjectID
 	}
 	return result, nil
 }
-func (v DefaultProductVariantService) ProductVariantDelete(id primitive.ObjectID) (bool, error) {
-	result, err := v.Repo.Delete(id)
-	if err != nil {
+func (v DefaultProductVariantService) ProductVariantDelete(id primitive.ObjectID, variantId primitive.ObjectID) (bool, error) {
+	result, err := v.Repo.Delete(id, variantId)
+	if err != nil && result {
 		return false, err
 	}
 	return result, nil

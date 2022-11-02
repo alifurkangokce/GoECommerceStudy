@@ -21,7 +21,7 @@ type ProductVariantRepositoryDb struct {
 type ProductVariantRepository interface {
 	Insert(variant dto.ProductVariantInsertDto) (bool, error)
 	Update(Id primitive.ObjectID, productVariant dto.ProductVariantUpdateRequestDto) (bool, error)
-	Delete(Id primitive.ObjectID) (bool, error)
+	Delete(Id primitive.ObjectID, variantId primitive.ObjectID) (bool, error)
 }
 
 func NewProductVariantRepository(dbClient *mongo.Collection) ProductVariantRepositoryDb {
@@ -81,12 +81,18 @@ func (v ProductVariantRepositoryDb) Update(id primitive.ObjectID, variant dto.Pr
 	return result.ModifiedCount > 0, nil
 
 }
-func (v ProductVariantRepositoryDb) Delete(id primitive.ObjectID) (bool, error) {
+func (v ProductVariantRepositoryDb) Delete(id primitive.ObjectID, variantId primitive.ObjectID) (bool, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	result, err := v.ProductVariantCollection.DeleteOne(ctx, bson.M{"_id": id})
+	result, err := v.ProductVariantCollection.UpdateOne(ctx,
+		bson.M{"_id": id},
+		bson.M{
+			"$pull": bson.M{"variants": bson.M{"_id": variantId}},
+		})
+
 	if err != nil {
+		fmt.Println("girdi")
 		return false, err
 	}
-	return result.DeletedCount > 0, nil
+	return result.ModifiedCount > 0, nil
 }
