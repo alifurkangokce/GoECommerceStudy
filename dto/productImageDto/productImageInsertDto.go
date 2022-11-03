@@ -1,12 +1,13 @@
-package models
+package productImageDto
 
 import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"time"
 )
 
-type ProductImage struct {
+type ProductImageInsertDto struct {
 	Id        primitive.ObjectID `bson:"_id"`
+	ProductId primitive.ObjectID `bson:"productId" json:"productId" validate:"required"`
 	Position  int8               `bson:"position" json:"position"`
 	CreatedAt time.Time          `bson:"createdAt" json:"created_at"`
 	UpdatedAt time.Time          `bson:"updatedAt" json:"updated_at"`

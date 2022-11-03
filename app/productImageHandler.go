@@ -1,7 +1,7 @@
 package app
 
 import (
-	"GoECommerceStudy/models"
+	"GoECommerceStudy/dto/productImageDto"
 	"GoECommerceStudy/services"
 	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -13,37 +13,20 @@ type ProductImageHandler struct {
 }
 
 func (h ProductImageHandler) CreateProductImage(ctx *fiber.Ctx) error {
-	var productImage models.ProductImage
+	var productImage productImageDto.ProductImageInsertDto
 	if err := ctx.BodyParser(&productImage); err != nil {
 		return ctx.Status(http.StatusBadRequest).JSON(err.Error())
 	}
 
 	result, err := h.Service.ProductImageInsert(productImage)
 
-	if err != nil || result.IsZero() {
+	if err != nil || !result {
 		return ctx.Status(http.StatusBadRequest).JSON(fiber.Map{"State": false})
 	}
 	return ctx.Status(http.StatusCreated).JSON(true)
 }
-
-func (h ProductImageHandler) GetAllProductImages(ctx *fiber.Ctx) error {
-	result, err := h.Service.ProductImagesGet()
-	if err != nil {
-		return ctx.Status(http.StatusBadRequest).JSON(err.Error())
-	}
-	return ctx.Status(http.StatusOK).JSON(result)
-}
-func (h ProductImageHandler) GetProductImageById(ctx *fiber.Ctx) error {
-	Id := ctx.Params("id")
-	_Id, _ := primitive.ObjectIDFromHex(Id)
-	result, err := h.Service.GetImageById(_Id)
-	if err != nil {
-		return ctx.Status(http.StatusBadRequest).JSON(err.Error())
-	}
-	return ctx.Status(http.StatusOK).JSON(result)
-}
 func (h ProductImageHandler) ProductImageUpdate(ctx *fiber.Ctx) error {
-	var productImage models.ProductImage
+	var productImage productImageDto.ProductImageUpdateDto
 	if err := ctx.BodyParser(&productImage); err != nil {
 		return ctx.Status(http.StatusBadRequest).JSON(err.Error())
 	}
@@ -57,12 +40,20 @@ func (h ProductImageHandler) ProductImageUpdate(ctx *fiber.Ctx) error {
 	return ctx.Status(http.StatusOK).JSON(result)
 }
 func (h ProductImageHandler) DeleteProductImage(ctx *fiber.Ctx) error {
-	productId := ctx.Params("id")
-	cnvId, _ := primitive.ObjectIDFromHex(productId)
-	result, err := h.Service.ProductImageDelete(cnvId)
-	if err != nil || result == false {
-		return ctx.Status(http.StatusBadRequest).JSON(err.Error())
+	var productImage productImageDto.ProductImageDeleteRequestDto
+	if err := ctx.BodyParser(&productImage); err != nil {
+		return err
 	}
-	return ctx.Status(http.StatusOK).JSON(fiber.Map{"State": true})
+
+	id := ctx.Params("id")
+	_Id, _ := primitive.ObjectIDFromHex(id)
+	_imageId, _ := primitive.ObjectIDFromHex(productImage.ImageId)
+
+	result, err := h.Service.ProductImageDelete(_Id, _imageId)
+
+	if err != nil {
+		return ctx.Status(http.StatusNotFound).JSON(fiber.Map{"Status": false})
+	}
+	return ctx.Status(http.StatusOK).JSON(fiber.Map{"Status": result})
 
 }

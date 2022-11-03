@@ -22,6 +22,7 @@ func (h ProductHandler) CreateProduct(ctx *fiber.Ctx) error {
 	result, err := h.Service.ProductInsert(product)
 
 	if err != nil || result.Status == false {
+
 		return ctx.Status(http.StatusBadRequest).JSON(fiber.Map{"State": false})
 	}
 

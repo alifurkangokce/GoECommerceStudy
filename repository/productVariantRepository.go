@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"GoECommerceStudy/dto"
+	"GoECommerceStudy/dto/productVariantDto"
 	"GoECommerceStudy/models"
 	"context"
 	"fmt"
@@ -19,15 +19,15 @@ type ProductVariantRepositoryDb struct {
 	ProductVariantCollection *mongo.Collection
 }
 type ProductVariantRepository interface {
-	Insert(variant dto.ProductVariantInsertDto) (bool, error)
-	Update(Id primitive.ObjectID, productVariant dto.ProductVariantUpdateRequestDto) (bool, error)
+	Insert(variant productVariantDto.ProductVariantInsertDto) (bool, error)
+	Update(Id primitive.ObjectID, productVariant productVariantDto.ProductVariantUpdateRequestDto) (bool, error)
 	Delete(Id primitive.ObjectID, variantId primitive.ObjectID) (bool, error)
 }
 
 func NewProductVariantRepository(dbClient *mongo.Collection) ProductVariantRepositoryDb {
 	return ProductVariantRepositoryDb{ProductVariantCollection: dbClient}
 }
-func (v ProductVariantRepositoryDb) Insert(variant dto.ProductVariantInsertDto) (bool, error) {
+func (v ProductVariantRepositoryDb) Insert(variant productVariantDto.ProductVariantInsertDto) (bool, error) {
 	productVariant := models.ProductVariant{
 		Id:             primitive.NewObjectID(),
 		Barcode:        variant.Barcode,
@@ -56,7 +56,7 @@ func (v ProductVariantRepositoryDb) Insert(variant dto.ProductVariantInsertDto) 
 	return result.ModifiedCount > 0, nil
 }
 
-func (v ProductVariantRepositoryDb) Update(id primitive.ObjectID, variant dto.ProductVariantUpdateRequestDto) (bool, error) {
+func (v ProductVariantRepositoryDb) Update(id primitive.ObjectID, variant productVariantDto.ProductVariantUpdateRequestDto) (bool, error) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
@@ -72,7 +72,7 @@ func (v ProductVariantRepositoryDb) Update(id primitive.ObjectID, variant dto.Pr
 		}
 	}
 
-	result, err := v.ProductVariantCollection.UpdateOne(ctx, bson.M{"_id": id, "variants.id": variant.Id}, bson.M{
+	result, err := v.ProductVariantCollection.UpdateOne(ctx, bson.M{"_id": id, "variants._id": variant.Id}, bson.M{
 		"$set": b,
 	}, opt)
 	if err != nil {
@@ -91,7 +91,6 @@ func (v ProductVariantRepositoryDb) Delete(id primitive.ObjectID, variantId prim
 		})
 
 	if err != nil {
-		fmt.Println("girdi")
 		return false, err
 	}
 	return result.ModifiedCount > 0, nil

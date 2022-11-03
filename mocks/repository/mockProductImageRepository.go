@@ -5,7 +5,7 @@
 package repository
 
 import (
-	models "GoECommerceStudy/models"
+	productImageDto "GoECommerceStudy/dto/productImageDto"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
@@ -36,55 +36,25 @@ func (m *MockProductImageRepository) EXPECT() *MockProductImageRepositoryMockRec
 }
 
 // Delete mocks base method.
-func (m *MockProductImageRepository) Delete(arg0 primitive.ObjectID) (bool, error) {
+func (m *MockProductImageRepository) Delete(arg0, arg1 primitive.ObjectID) (bool, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Delete", arg0)
+	ret := m.ctrl.Call(m, "Delete", arg0, arg1)
 	ret0, _ := ret[0].(bool)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Delete indicates an expected call of Delete.
-func (mr *MockProductImageRepositoryMockRecorder) Delete(arg0 interface{}) *gomock.Call {
+func (mr *MockProductImageRepositoryMockRecorder) Delete(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockProductImageRepository)(nil).Delete), arg0)
-}
-
-// GetAll mocks base method.
-func (m *MockProductImageRepository) GetAll() ([]models.ProductImage, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetAll")
-	ret0, _ := ret[0].([]models.ProductImage)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetAll indicates an expected call of GetAll.
-func (mr *MockProductImageRepositoryMockRecorder) GetAll() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAll", reflect.TypeOf((*MockProductImageRepository)(nil).GetAll))
-}
-
-// GetById mocks base method.
-func (m *MockProductImageRepository) GetById(arg0 primitive.ObjectID) (*models.ProductImage, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetById", arg0)
-	ret0, _ := ret[0].(*models.ProductImage)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetById indicates an expected call of GetById.
-func (mr *MockProductImageRepositoryMockRecorder) GetById(arg0 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetById", reflect.TypeOf((*MockProductImageRepository)(nil).GetById), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockProductImageRepository)(nil).Delete), arg0, arg1)
 }
 
 // Insert mocks base method.
-func (m *MockProductImageRepository) Insert(arg0 models.ProductImage) (primitive.ObjectID, error) {
+func (m *MockProductImageRepository) Insert(arg0 productImageDto.ProductImageInsertDto) (bool, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Insert", arg0)
-	ret0, _ := ret[0].(primitive.ObjectID)
+	ret0, _ := ret[0].(bool)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -96,7 +66,7 @@ func (mr *MockProductImageRepositoryMockRecorder) Insert(arg0 interface{}) *gomo
 }
 
 // Update mocks base method.
-func (m *MockProductImageRepository) Update(arg0 primitive.ObjectID, arg1 models.ProductImage) (bool, error) {
+func (m *MockProductImageRepository) Update(arg0 primitive.ObjectID, arg1 productImageDto.ProductImageInsertDto) (bool, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Update", arg0, arg1)
 	ret0, _ := ret[0].(bool)

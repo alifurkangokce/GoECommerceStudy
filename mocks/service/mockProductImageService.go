@@ -5,7 +5,7 @@
 package services
 
 import (
-	models "GoECommerceStudy/models"
+	productImageDto "GoECommerceStudy/dto/productImageDto"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
@@ -35,41 +35,26 @@ func (m *MockProductImageService) EXPECT() *MockProductImageServiceMockRecorder 
 	return m.recorder
 }
 
-// GetImageById mocks base method.
-func (m *MockProductImageService) GetImageById(arg0 primitive.ObjectID) (*models.ProductImage, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetImageById", arg0)
-	ret0, _ := ret[0].(*models.ProductImage)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetImageById indicates an expected call of GetImageById.
-func (mr *MockProductImageServiceMockRecorder) GetImageById(arg0 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetImageById", reflect.TypeOf((*MockProductImageService)(nil).GetImageById), arg0)
-}
-
 // ProductImageDelete mocks base method.
-func (m *MockProductImageService) ProductImageDelete(arg0 primitive.ObjectID) (bool, error) {
+func (m *MockProductImageService) ProductImageDelete(arg0, arg1 primitive.ObjectID) (bool, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ProductImageDelete", arg0)
+	ret := m.ctrl.Call(m, "ProductImageDelete", arg0, arg1)
 	ret0, _ := ret[0].(bool)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // ProductImageDelete indicates an expected call of ProductImageDelete.
-func (mr *MockProductImageServiceMockRecorder) ProductImageDelete(arg0 interface{}) *gomock.Call {
+func (mr *MockProductImageServiceMockRecorder) ProductImageDelete(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProductImageDelete", reflect.TypeOf((*MockProductImageService)(nil).ProductImageDelete), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProductImageDelete", reflect.TypeOf((*MockProductImageService)(nil).ProductImageDelete), arg0, arg1)
 }
 
 // ProductImageInsert mocks base method.
-func (m *MockProductImageService) ProductImageInsert(arg0 models.ProductImage) (primitive.ObjectID, error) {
+func (m *MockProductImageService) ProductImageInsert(arg0 productImageDto.ProductImageInsertDto) (bool, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProductImageInsert", arg0)
-	ret0, _ := ret[0].(primitive.ObjectID)
+	ret0, _ := ret[0].(bool)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -81,7 +66,7 @@ func (mr *MockProductImageServiceMockRecorder) ProductImageInsert(arg0 interface
 }
 
 // ProductImageUpdate mocks base method.
-func (m *MockProductImageService) ProductImageUpdate(arg0 primitive.ObjectID, arg1 models.ProductImage) (bool, error) {
+func (m *MockProductImageService) ProductImageUpdate(arg0 primitive.ObjectID, arg1 productImageDto.ProductImageInsertDto) (bool, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ProductImageUpdate", arg0, arg1)
 	ret0, _ := ret[0].(bool)
@@ -93,19 +78,4 @@ func (m *MockProductImageService) ProductImageUpdate(arg0 primitive.ObjectID, ar
 func (mr *MockProductImageServiceMockRecorder) ProductImageUpdate(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProductImageUpdate", reflect.TypeOf((*MockProductImageService)(nil).ProductImageUpdate), arg0, arg1)
-}
-
-// ProductImagesGet mocks base method.
-func (m *MockProductImageService) ProductImagesGet() ([]models.ProductImage, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ProductImagesGet")
-	ret0, _ := ret[0].([]models.ProductImage)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// ProductImagesGet indicates an expected call of ProductImagesGet.
-func (mr *MockProductImageServiceMockRecorder) ProductImagesGet() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProductImagesGet", reflect.TypeOf((*MockProductImageService)(nil).ProductImagesGet))
 }

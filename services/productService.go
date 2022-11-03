@@ -10,8 +10,7 @@ import (
 
 //go:generate mockgen -destination=../mocks/service/mockProductService.go -package=services GoECommerceStudy/services ProductService
 type DefaultProductService struct {
-	Repo      repository.ProductRepository
-	ImageRepo repository.ProductImageRepository
+	Repo repository.ProductRepository
 }
 type ProductService interface {
 	ProductInsert(product models.Product) (*dto.ProductDto, error)
@@ -20,39 +19,32 @@ type ProductService interface {
 	ProductUpdate(id primitive.ObjectID, product models.Product) (*dto.ProductDto, error)
 }
 
-func NewProductService(Repo repository.ProductRepository, ImageRepo repository.ProductImageRepository) DefaultProductService {
-	return DefaultProductService{Repo: Repo, ImageRepo: ImageRepo}
+func NewProductService(Repo repository.ProductRepository) DefaultProductService {
+	return DefaultProductService{Repo: Repo}
 }
 
 func (d DefaultProductService) ProductInsert(product models.Product) (*dto.ProductDto, error) {
-	var res dto.ProductDto
-	if len(product.Name) <= 3 {
-		res.Status = false
-		return &dto.ProductDto{Status: false}, nil
+
+	var productImageArr []models.ProductImage
+	if product.Images != nil {
+		for _, v := range product.Images {
+			productImage := models.ProductImage{
+				Id:        primitive.NewObjectID(),
+				Position:  v.Position,
+				CreatedAt: time.Now(),
+				Width:     v.Width,
+				Height:    v.Height,
+				Src:       v.Src,
+			}
+			productImageArr = append(productImageArr, productImage)
+		}
 	}
+	product.Images = productImageArr
 	result, err := d.Repo.Insert(product)
 	if err != nil {
-		res.Status = false
 		return nil, err
 	}
-	if product.Images != nil {
-		var updateImages []models.ProductImage
-		for _, image := range product.Images {
-			dto := models.ProductImage{
-				ProductId: result,
-				Position:  image.Position,
-				CreatedAt: time.Now(),
-				Width:     image.Width,
-				Height:    image.Height,
-				Src:       image.Src,
-			}
-			imageInsertedId, _ := d.ImageRepo.Insert(dto)
-			dto.Id = imageInsertedId
-			updateImages = append(updateImages, dto)
-		}
-		d.Repo.Update(result, models.Product{Images: updateImages})
-	}
-	res = dto.ProductDto{Status: true}
+	res := dto.ProductDto{Status: !result.IsZero()}
 	return &res, nil
 }
 func (d DefaultProductService) ProductsGet() ([]models.Product, error) {

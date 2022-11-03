@@ -1,7 +1,7 @@
 package app
 
 import (
-	"GoECommerceStudy/dto"
+	"GoECommerceStudy/dto/productVariantDto"
 	"GoECommerceStudy/services"
 	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -13,7 +13,7 @@ type ProductVariantHandler struct {
 }
 
 func (s ProductVariantHandler) CreateProductVariant(ctx *fiber.Ctx) error {
-	var productVariant dto.ProductVariantInsertDto
+	var productVariant productVariantDto.ProductVariantInsertDto
 	if err := ctx.BodyParser(&productVariant); err != nil {
 		return err
 	}
@@ -24,7 +24,7 @@ func (s ProductVariantHandler) CreateProductVariant(ctx *fiber.Ctx) error {
 	return ctx.Status(http.StatusCreated).JSON(fiber.Map{"Status": result})
 }
 func (s ProductVariantHandler) UpdateProductVariant(ctx *fiber.Ctx) error {
-	var productVariant dto.ProductVariantUpdateRequestDto
+	var productVariant productVariantDto.ProductVariantUpdateRequestDto
 	if err := ctx.BodyParser(&productVariant); err != nil {
 		return err
 	}
@@ -38,7 +38,7 @@ func (s ProductVariantHandler) UpdateProductVariant(ctx *fiber.Ctx) error {
 }
 func (s ProductVariantHandler) DeleteProductVariant(ctx *fiber.Ctx) error {
 
-	var productVariant dto.ProductVariantDeleteRequestDto
+	var productVariant productVariantDto.ProductVariantDeleteRequestDto
 	if err := ctx.BodyParser(&productVariant); err != nil {
 		return err
 	}
